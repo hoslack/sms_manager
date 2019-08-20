@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const signUp = (req, res, next) => {
   const { username, password, phoneNumber } = req.body;
+  if (!phoneNumber || !username || !password){
+    res.status(400).json({ message: 'Please check your request parameters' });
+    return
+  }
   if(isNaN(phoneNumber)){
     res.status(400).json({ message: 'Phone Number must be a number'})
   }
@@ -35,6 +39,10 @@ const signUp = (req, res, next) => {
 
  const login = async (req, res, next) => {
   const { password, phoneNumber } = req.body;
+   if (!phoneNumber || !password){
+     res.status(400).json({ message: 'Please check your request parameters' });
+     return
+   }
   const user = await User.find({ phoneNumber }).exec();
 
   if(user.length){

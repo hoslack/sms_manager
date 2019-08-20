@@ -1,0 +1,261 @@
+swagger: '2.0'
+info:
+  title: sms-manager
+  description: This is an sms management api
+  version: '1.1'
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+basePath: /api
+tags:
+  - name: Auth
+    description: Authentication
+  - name: Contacts
+    description: Contacts Management
+  - name: Messages
+    description: Messages Management
+paths:
+  /contact:
+    post:
+      description: Create a contact to enable you login and send messages
+      tags:
+        - Contacts
+      parameters:
+        - in: body
+          name: contacts
+          required: true
+          schema:
+            type: object
+            required:
+              - phoneNumber
+              - username
+            properties:
+              username:
+                type: string
+              phoneNumber:
+                type: string
+        - in: header
+          required: true
+          name: authorization
+          type: string
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Error occurred
+        '400':
+          description: Bad request
+        '409':
+          description: Contact exists
+    get:
+      tags:
+        - Contacts
+      description: Get all Contacts associated with your number
+      parameters:
+        - in: header
+          required: true
+          name: authorization
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+  '/contact/{id}':
+    get:
+      tags:
+        - Contacts
+      description: Get Single contact
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+        - name: id
+          in: path
+          description: id of the contact to retrieve
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: unauthorized
+        '404':
+          description: Not found
+    delete:
+      tags:
+        - Contacts
+      description: Delete Single contact
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+        - name: id
+          in: path
+          description: id of the contact to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Successfully deleted
+        '401':
+          description: unauthorized
+        '404':
+          description: Not found
+  /login:
+    post:
+      description: Login with registered number and password to obtain a token
+      tags:
+        - Auth
+      parameters:
+        - in: body
+          name: login
+          required: true
+          schema:
+            type: object
+            required:
+              - phoneNumber
+              - password
+            properties:
+              phoneNumber:
+                type: string
+              password:
+                type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Error Occurred
+  /sign_up:
+    post:
+      description: Register
+      tags:
+        - Auth
+      parameters:
+        - in: body
+          name: Sign up
+          schema:
+            type: object
+            required:
+              - username
+              - phoneNumber
+              - password
+            properties:
+              phoneNumber:
+                type: string
+              password:
+                type: string
+              username:
+                type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Error Occured
+  /message:
+    get:
+      tags:
+        - Messages
+      description: Get all messages
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+      responses:
+        '200':
+          description: Okay
+        '404':
+          description: Not Found
+        '401':
+          description: Unauthorized
+    post:
+      description: Send a Message to a particular contact already registered
+      tags:
+        - Messages
+      parameters:
+        - in: body
+          name: Send Message
+          schema:
+            type: object
+            required:
+              - receiver
+              - text
+            properties:
+              receiver:
+                type: string
+              text:
+                type: string
+        - in: header
+          name: authorization
+          type: string
+      responses:
+        '201':
+          description: Created/Sent
+        '422':
+          description: errors
+  '/message/{id}':
+    get:
+      tags:
+        - Messages
+      description: Get Single contact
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+        - name: id
+          in: path
+          description: id of the message to retrieve
+          required: true
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: Okay
+    put:
+      tags:
+        - Messages
+      description: Update Single contact
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+        - name: id
+          in: path
+          description: id of the message to edit
+          required: true
+          type: string
+        - in: body
+          name: text
+          schema:
+            type: object
+            required:
+              - text
+            properties:
+              text:
+                type: string
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: OK
+    delete:
+      tags:
+        - Messages
+      description: Delete Single contact
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+        - name: id
+          in: path
+          description: id of the message to delete
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Successfully deleted
+        '401':
+          description: unauthorized
+        '404':
+          description: Not found

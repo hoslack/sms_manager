@@ -21,7 +21,7 @@ describe('Messages', () => {
   describe('/POST Login', () => {
     it('it should login a user', (done) => {
       chai.request(server)
-        .post('/auth/login')
+        .post('/api/login')
         .send(
           {"phoneNumber":"0723255128",
         "password":"Amondi95!"})
@@ -36,10 +36,9 @@ describe('Messages', () => {
   describe('/GET messages', () => {
     it('it should GET all the messages without creating', (done) => {
       chai.request(server)
-        .get('/api/message/get_all').set("authorization", `Bearer ${accessToken}`)
+        .get('/api/message').set("authorization", `Bearer ${accessToken}`)
         .end((err, res) => {
-          console.log(res.body);
-          res.should.have.status(400);
+          res.should.have.status(404);
           done();
         });
     });
@@ -48,14 +47,12 @@ describe('Messages', () => {
   describe('/GET messages', () => {
     it('it should GET all the messages without token', (done) => {
       chai.request(server)
-        .get('/api/message/get_all')
+        .get('/api/message')
         .end((err, res) => {
-          console.log(res.body);
           res.should.have.status(401);
           res.body.message.should.equal('Invalid token');
           done();
         });
     });
   });
-
 });

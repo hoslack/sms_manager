@@ -35,7 +35,7 @@ const getAllMessages = async (req, res, next) => {
   if (messages.length) {
     res.status(200).json({messages})
   } else {
-    res.status(400).json({ message: "No messages found" })
+    res.status(404).json({ message: "No messages found" })
   }
 };
 
@@ -61,7 +61,7 @@ const updateMessage = async (req, res, next) => {
     res.status(400).json({ message: 'Please check your request parameters' });
     return
   }
-  Message.findOneAndUpdate({_id: id}, {$set: {text: text}}, {useFindAndModify: false}, (err, message) => {
+  Message.findOneAndUpdate({_id: id}, {$set: {text: text}}, {useFindAndModify: false, new: true}, (err, message) => {
     if (err) {
       res.status(400).json({ message: "An error occurred while updating the message" });
     }

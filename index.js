@@ -4,13 +4,17 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-const authRoutes = require('./routes/authRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
 dotenv.config();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 mongoose.connect(process.env.MONGO_DB_URI, { useCreateIndex: true,  useNewUrlParser: true  });
 var db = mongoose.connection;
@@ -19,9 +23,7 @@ db.once('open', function() {
   console.log("we're connected!");
 });
 
-app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
-
 
 app.get('/', (req, res, next) => {
   res.status(200).send({
