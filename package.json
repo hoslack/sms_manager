@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "blanket": "^1.2.3",
     "body-parser": "^1.19.0",
     "codacy-coverage": "^3.4.0",
